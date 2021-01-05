@@ -1,10 +1,7 @@
-const readline = require('readline-sync');
-
-
 
 class Todo {
 
-  static DONE_MARKER = [X];
+  static DONE_MARKER = ['X'];
   static NOT_DONE_MARKER = [];
 
   constructor(title) {
@@ -38,9 +35,69 @@ class ToDoList {
     this.title = title;
     this.toDos = [];
   }
+  add(item) {
+    if (item instanceof Todo) {
+      this.toDos.push(item);
+    } else {
+      throw new TypeError("can only add Todo objects");
+    }
+  }
+  size() {
+    return this.toDos.length;
+  }
 
+  first() {
+    return this.toDos[0];
+  }
 
+  last() {
+    return this.toDos[this.toDos.length - 1]
+  }
+
+  itemAt(place) {
+    this.validateIndex(place);
+    return this.toDos[place];
+  }
+
+  markDoneAt(position) {
+    this.validateIndex(position);
+    this.toDos[position].markDone();
+  }
+
+  markUndoneAt(position) {
+    this.validateIndex(position);
+    this.toDos[position].markUndone();
+  }
+
+  validateIndex(index) {
+    if (!(index in this.toDos)) {
+      throw new TypeError(`invalid index: ${index}`);
+    }
+  }
+
+  shift() {
+    this.toDos.shift();
+  }
+  pop() {
+    this.toDos.pop();
+  }
+
+  removeAt(index) {
+    this.validateIndex(index);
+    return this.toDos.splice(index, 1);
+  }
+
+  toString() {
+    let title = `---- ${this.title} ----`;
+    let list = this.toDos.map(todo => todo.toString()).join("\n");
+    return `${title}\n${list}`;
+  }
 }
 
-let list = new TodoList("Today's Todos");
-console.log(list); // TodoList { title: "Today's Todos", todos: [] }
+let list = new ToDoList("Today's Todos");
+
+let todo1 = new Todo("Buy milk");
+let todo2 = new Todo("Clean room");
+let todo3 = new Todo("Go to the gym");
+let todo4 = new Todo("Go shopping");
+
